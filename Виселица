@@ -1,0 +1,84 @@
+#include<iostream>
+#include<ctime>
+#include<cstdlib>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cctype>
+#include<locale>
+using namespace std;
+
+
+
+
+int main() {
+	setlocale(LC_ALL, "rus");
+	setlocale(LC_CTYPE, "rus");
+	system("chcp 1251");
+	const int MAX_WRONGS = 8;
+	vector<string>words;
+	words.push_back("человек");
+	words.push_back("ящерица");
+	words.push_back("лосось");
+	link:
+	srand(time(0));
+	random_shuffle(words.begin(), words.end());
+	const string THE_WORD = words[0];
+	int wrong = 0;
+	string soFar(THE_WORD.size(), '-');
+	string used = "";
+	while ((wrong < MAX_WRONGS) && soFar != THE_WORD)
+	{
+		cout << "\nУ вас осталось " << (MAX_WRONGS - wrong) << " попыток\n";
+		cout << "Вы использовали следующие буквы:" << used << endl;
+		cout << "Слово: " << soFar << endl;
+
+		char guess;
+		cout << "\nВаша догатка: ";
+		cin >> guess;
+		while (used.find(guess) != string::npos)
+		{
+			cout << "Вы уже догадались " << guess << endl;
+			cout << "Введите вашу догадку: ";
+			cin >> guess;
+		}
+		used += guess;
+		if (THE_WORD.find(guess) != string::npos)
+		{
+			cout << "Отлично, " << guess << " есть в этом слове" << endl;
+			for (int i = 0; i < THE_WORD.length(); ++i)
+			{
+				if (THE_WORD[i] == guess)
+				{
+					soFar[i] = guess;
+				}
+			}
+		}
+		else
+		{
+			cout << "Извините, " << guess << " не та буква\n";
+			++wrong;
+		}
+	}
+	string otvet;
+	if (wrong == MAX_WRONGS)
+	{
+		cout << "Вы исчерпали все попытки";
+	}
+	else
+	{
+		cout << "Вы догадались!\n";
+	}
+	cout << "Это слово " << THE_WORD << endl;
+	if (soFar == THE_WORD)
+	{
+		words.erase(words.begin());
+		cout << "Желаете попробовать новое слово?";
+		cin >> otvet;
+		if (otvet == "да")
+		{
+			goto link;
+		}
+	}
+	return 0;
+}
